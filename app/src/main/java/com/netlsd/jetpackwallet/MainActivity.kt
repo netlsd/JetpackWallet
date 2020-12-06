@@ -1,30 +1,30 @@
 package com.netlsd.jetpackwallet
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.Text
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.filled.WorkOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.ui.tooling.preview.Preview
 import com.netlsd.jetpackwallet.model.Recipe
 import com.netlsd.jetpackwallet.ui.EthWalletTheme
 import org.web3j.crypto.Credentials
@@ -46,14 +46,33 @@ class MainActivity : AppCompatActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     Main()
+//                    Main2()
 
-                    Thread {
-                        transaction()
-                    }.start()
+//                    Thread {
+//                        transaction()
+//                    }.start()
                 }
             }
         }
     }
+}
+
+@Composable
+fun Main2() {
+    val context = AmbientContext.current
+
+    Scaffold(topBar = { Text(text = "Jetpack Wallet") }, bottomBar = {
+        Row {
+            IconButton(onClick = { showToast(context) }) {
+                Icon(Icons.Default.Home)
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.WorkOff)
+            }
+        }
+    }, bodyContent = {
+        Text(text = "hello")
+    })
 }
 
 fun transaction() {
@@ -96,11 +115,29 @@ fun getBalance(): String {
     ).sendAsync().get().balance.toString()
 }
 
+@Preview(showBackground = true)
+@Composable
+fun BottomBar() {
+    val context = AmbientContext.current
+
+    BottomAppBar {
+        IconButton(onClick = { showToast(context) }) {
+            Icon(Icons.Default.Home)
+        }
+    }
+}
+
+fun showToast(context: Context) {
+    Toast.makeText(context, "ssss", Toast.LENGTH_SHORT).show()
+}
+
 @Composable
 fun Main() {
+    val context = AmbientContext.current
+
     Column(modifier = Modifier.fillMaxWidth()) {
         TopAppBar(title = {
-            Text(text = "CookBook")
+            Text(text = "Jetpack Wallet")
         })
         RecipeList(
             recipes = listOf(
@@ -131,6 +168,11 @@ fun Main() {
                 ),
             )
         )
+        BottomAppBar {
+            IconButton(onClick = { showToast(context) }) {
+                Icon(Icons.Default.Home)
+            }
+        }
     }
 }
 
@@ -154,10 +196,10 @@ fun RecipeCard(recipe: Recipe) {
         modifier = Modifier.padding(10.dp)
     ) {
         val image = imageResource(recipe.imageResource)
-//    val image = vectorResource(id = recipe.imageResource)
+//        val image = vectorResource(id = recipe.imageResource)
         Column(modifier = Modifier.fillMaxWidth()) {
             Image(
-                asset = image, contentScale = ContentScale.Crop,
+                bitmap = image, contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth().height(144.dp)
             )
             Column(modifier = Modifier.padding(15.dp)) {
